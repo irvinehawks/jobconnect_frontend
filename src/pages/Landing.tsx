@@ -12,12 +12,22 @@ const LandingPage: React.FC = () => {
           <p className="text-lg md:text-xl mb-6">
             Connecting job seekers with opportunities in Zimbabwe.
           </p>
-          <a
-            href="#"
-            className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-full transition duration-300"
-          >
-            Get Started
-          </a>
+
+          <div className="flex flex-col lg:flex-row items-center justify-center text-center space-y-6 lg:space-x-6 lg:space-y-0">
+            <a
+              href="/signin"
+              className="bg-white hover:bg-yellow-500 text-black font-bold py-3 px-14 rounded-full transition duration-300 w-3/4 sm:w-3/4 md:w-3/4 lg:w-auto"
+            >
+              Sign In
+            </a>
+
+            <a
+              href="/signup"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-10 rounded-full transition duration-300 w-3/4 sm:w-3/4 md:w-3/4 lg:w-auto"
+            >
+              Get Started
+            </a>
+          </div>
         </div>
       </header>
 
@@ -77,7 +87,7 @@ const LandingPage: React.FC = () => {
             Join JobConnect Zimbabwe and start applying for jobs today!
           </p>
           <a
-            href="#"
+            href="/signup"
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-full transition duration-300"
           >
             Sign Up Now
