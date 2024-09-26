@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
+import LandingPage from './pages/Landing';
 
 function App() {
   return (
     <div className="App">
-      Hello Job Seekers !!!
+      <LandingPage />
     </div>
   );
 }
