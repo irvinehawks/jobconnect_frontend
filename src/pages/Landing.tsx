@@ -1,13 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const LandingPage: React.FC = () => {
+  const phrases = ['Welcome to JobConnect Zimbabwe', 'Connecting job seekers with opportunities', 'Find your dream job here!'];
+  const [displayedText, setDisplayedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopIndex, setLoopIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  useEffect(() => {
+    const handleTyping = () => {
+      const currentPhrase = phrases[loopIndex % phrases.length];
+      if (isDeleting) {
+        setDisplayedText(currentPhrase.substring(0, charIndex - 1));
+        setCharIndex(charIndex - 1);
+        setTypingSpeed(50);
+      } else {
+        setDisplayedText(currentPhrase.substring(0, charIndex + 1));
+        setCharIndex(charIndex + 1);
+        setTypingSpeed(150);
+      }
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        setTimeout(() => setIsDeleting(true), 1000); // Wait before deleting
+      } else if (isDeleting && charIndex === 0) {
+        setIsDeleting(false);
+        setLoopIndex(loopIndex + 1);
+      }
+    };
+
+    const timer = setTimeout(handleTyping, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [charIndex, isDeleting, loopIndex, typingSpeed]);
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Hero Section */}
       <header className="bg-blue-900 text-white">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Welcome to JobConnect Zimbabwe
+            {displayedText}
+            <span className="blinking-cursor">|</span>
           </h1>
           <p className="text-lg md:text-xl mb-6">
             Connecting job seekers with opportunities in Zimbabwe.
@@ -106,4 +140,3 @@ const LandingPage: React.FC = () => {
 };
 
 export default LandingPage;
-
