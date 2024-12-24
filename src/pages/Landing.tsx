@@ -44,7 +44,7 @@ const LandingPage: React.FC = () => {
             <span className="blinking-cursor">|</span>
           </h1>
           <p className="text-lg md:text-xl mb-6">
-            Connecting job seekers with opportunities in Zimbabwe.
+            
           </p>
 
           <div className="flex flex-col lg:flex-row items-center justify-center text-center space-y-6 lg:space-x-6 lg:space-y-0">
