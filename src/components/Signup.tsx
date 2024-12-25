@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import api from '../api/Api';
 
-const SignUp = () => {
-  const { register, handleSubmit, watch } = useForm();
+type FormValues = {
+  email: string;
+  password: string;
+  role: string;
+  companyName?: string;
+};
+
+const SignUp: React.FC = () => {
+  const { register, handleSubmit, watch } = useForm<FormValues>();
   const [showPassword, setShowPassword] = useState(false);
+  const role = watch('role'); // Watch the role field dynamically
 
-  const role = watch('role'); // Dynamically watch the selected role
-
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      await api.post('/auth/signup', data);
+      const response = await api.post('/auth/signup', data);
       alert('Sign up successful!');
-    } catch (error) {
+      console.log('Response:', response.data);
+    } catch (error: any) {
+      console.error('Error:', error.response?.data || error.message);
       alert('Sign up failed. Please try again.');
     }
   };
