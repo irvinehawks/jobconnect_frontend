@@ -1,74 +1,68 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/Api';
+import axios from 'axios';
 
-const SignIn = () => {
-  const { register, handleSubmit } = useForm();
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+const Login = () => {
   const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
 
-  const onSubmit = async (data: any) => {
-    const response = await api.post('/auth/signin', data);
-    localStorage.setItem('authToken', response.data.accessToken);
-    navigate('/dashboard');
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const response = await axios.post("https://jobconnectbackend-production-5020.up.railway.app/signin", data);
+      const { token, userType } = response.data;
+
+      // Store token and userType in localStorage
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('userType', userType);
+
+      alert('Login successful! Redirecting to dashboard...');
+      
+      // Navigate to the appropriate dashboard
+      navigate('/dashboard', { state: { userType } });
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Login failed');
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="bg-white p-8 rounded shadow-md w-96 space-y-4"
       >
-        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">Sign In</h2>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            {...register('email')}
-            id="email"
-            placeholder="Email"
-            type="email"
-            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            {...register('password')}
-            id="password"
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
-          />
-        </div>
-        <div className="text-right mb-4">
-          <a
-            href="/forgot-password"
-            className="text-sm text-blue-500 hover:underline"
-          >
-            Forgot password?
-          </a>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 shadow-md"
+        <h2 className="text-xl font-bold mb-4">Login</h2>
+        
+        <input 
+          {...register('email', { required: 'Email is required' })} 
+          type="email" 
+          placeholder="Email" 
+          className="w-full p-2 border rounded"
+        />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+
+        <input 
+          {...register('password', { required: 'Password is required' })} 
+          type="password" 
+          placeholder="Password" 
+          className="w-full p-2 border rounded"
+        />
+        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+
+        <button 
+          type="submit" 
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
-          Sign In
+          Login
         </button>
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
-            Don’t have an account?{' '}
-            <a href="/signup" className="text-blue-500 hover:underline">
-              Sign up
-            </a>
-          </p>
-        </div>
       </form>
     </div>
   );
 };
 
-export default SignIn;
+export default Login;
